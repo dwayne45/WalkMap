@@ -38,18 +38,64 @@ body{height:100%;margin:0px;font-family: Helvetica,Arial;}
   var panoClient;
   var nextPanoId;
   
-  var startLoc = new Array();
-  startLoc[0] = 'rio claro, trinidad';
-  startLoc[1] = 'preysal, trinidad';
-  startLoc[2] = 'san fernando, trinidad';
-  startLoc[3] = 'couva, trinidad';
+  var startLoc = new Array ();
+  var endLoc = new Array ();
+  startLoc[0] = {lat: 38.3728, lng: -85.4441};
+  endLoc[0] = "36067"
+  startLoc[1] = "36067";
+  endLoc[1] = "83647";
+  startLoc[2] = "83647";
+  endLoc[2] = "50201";
+  startLoc[3] = "50201";
+  endLoc[3] = {lat: 38.3728, lng: -85.4441};
 
-  var endLoc = new Array();
-  endLoc[0] = 'princes town, trinidad';
-  endLoc[1] = 'tabaquite, trinidad';
-  endLoc[2] = 'mayaro, trinidad';
-  endLoc[3] = 'arima, trinidad';
-
+  var waypoints = new Array();
+  
+  var wayPoints1 = new Array();
+  wayPoints1[0] = {location: "43062"};
+  wayPoints1[1] = {location: "45814"};
+  wayPoints1[2] = {location: "14424"};
+  wayPoints1[3] = {location: "17011"};
+  wayPoints1[4] = {location: "27410"};
+  wayPoints1[5] = {location: "31763"};
+  wayPoints1[6] = {location: "36067"};
+  
+  waypoints[0] = wayPoints1;
+  
+  var wayPoints2 = new Array();
+  wayPoints2[0] = {location: "37167"};
+  wayPoints2[1] = {location: "72210"};
+  wayPoints2[2] = {location: "74137"};
+  wayPoints2[3] = {location: "76249"};
+  wayPoints2[4] = {location: "78130"};
+  wayPoints2[5] = {location: "79416"};
+  wayPoints2[6] = {location: "93619"};
+  wayPoints2[7] = {location: "97405"};
+  
+  waypoints[1] = wayPoints2;
+  
+  var wayPoints3 = new Array();
+  wayPoints3[0] = {location: "80524"};
+  wayPoints3[1] = {location: "68949"};
+  wayPoints3[2] = {location: {lat: 39.5104, lng: -98.4346}};
+  wayPoints3[3] = {location: "66006"};
+  wayPoints3[4] = {location: "68505"};
+  wayPoints3[5] = {location: "68105"};
+  wayPoints3[6] = {location: "50201"};
+  
+  waypoints[2] = wayPoints3;
+  
+  var wayPoints4 = new Array();
+  wayPoints4[0] = {location: "51443"};
+  wayPoints4[1] = {location: "57032"};
+  wayPoints4[2] = {location: "57252"};
+  wayPoints4[3] = {location: {lat: 44.5347, lng: -88.0945}};
+  wayPoints4[4] = {location: "61615"};
+  wayPoints4[5] = {location: "63119"};
+  wayPoints4[6] = {location: "62468"};
+  wayPoints4[7] = {location: "46038"};
+  
+  waypoints[3] = wayPoints4;
 
   var Colors = ["#FF0000", "#00FF00", "#0000FF"];
 
@@ -62,17 +108,12 @@ function initialize() {
     });
 
     var myOptions = {
-      zoom: 10,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      zoom: 4,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+	  center: {lat: 39.8283, lng: -98.5795}
     }
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    address = 'Trinidad and Tobago'
-    geocoder = new google.maps.Geocoder();
-    geocoder.geocode( { 'address': address}, function(results, status) {
-     map.fitBounds(results[0].geometry.viewport);
-
-    }); 
   // setRoutes();
   } 
 
@@ -110,12 +151,13 @@ function setRoutes(){
     }
     directionsService = new google.maps.DirectionsService();
 
-    var travelMode = google.maps.DirectionsTravelMode.DRIVING;  
+    var travelMode = google.maps.DirectionsTravelMode.WALKING;  
 
     var request = {
         origin: startLoc[i],
         destination: endLoc[i],
-        travelMode: travelMode
+        travelMode: travelMode,
+		waypoints: waypoints[i]
     };  
 
         directionsService.route(request,makeRouteCallback(i,directionsDisplay[i]));
@@ -125,7 +167,7 @@ function setRoutes(){
 
     function makeRouteCallback(routeNum,disp){
         if (polyline[routeNum] && (polyline[routeNum].getMap() != null)) {
-         startAnimation(routeNum);
+         //startAnimation(routeNum);
          return;
         }
         return function(response, status){
@@ -161,7 +203,7 @@ function setRoutes(){
             disp.setDirections(response);
 
 
-            //Markers               
+            /*Markers               
             for (i=0;i<legs.length;i++) {
               if (i == 0) { 
                 startLocation[routeNum].latlng = legs[i].start_location;
@@ -183,13 +225,13 @@ function setRoutes(){
                 }
 
               }
-            }
+            }*/
 
          }       
 
          polyline[routeNum].setMap(map);
          //map.fitBounds(bounds);
-         startAnimation(routeNum);  
+         //startAnimation(routeNum);  
 
     } // else alert("Directions request failed: "+status);
 
